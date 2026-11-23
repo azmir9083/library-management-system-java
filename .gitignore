@@ -1,0 +1,11 @@
+# Compiled classes
+*.class
+out/
+bin/
+build/
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
