@@ -68,9 +68,7 @@ public class LibraryManagementSystem {
             System.out.println("6. Borrow Book");
             System.out.println("7. Return Book");
             System.out.println("8. Exit");
-            System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            int choice = readInt("Enter your choice: ");
 
             switch (choice) {
                 case 1:
@@ -104,17 +102,14 @@ public class LibraryManagementSystem {
     }
 
     private static void addBook() {
-        System.out.print("Enter Book ID: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int id = readInt("Enter Book ID: ");
         System.out.print("Enter Title: ");
         String title = scanner.nextLine();
         System.out.print("Enter Author: ");
         String author = scanner.nextLine();
         System.out.print("Enter Genre: ");
         String genre = scanner.nextLine();
-        System.out.print("Enter Quantity: ");
-        int quantity = scanner.nextInt();
+        int quantity = readInt("Enter Quantity: ");
         books.add(new Book(id, title, author, genre, quantity));
         System.out.println("Book added successfully!");
     }
@@ -143,9 +138,7 @@ public class LibraryManagementSystem {
     }
 
     private static void addStudent() {
-        System.out.print("Enter Student ID: ");
-        int id = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int id = readInt("Enter Student ID: ");
         System.out.print("Enter Name: ");
         String name = scanner.nextLine();
         System.out.print("Enter Email: ");
@@ -165,10 +158,8 @@ public class LibraryManagementSystem {
     }
 
     private static void borrowBook() {
-        System.out.print("Enter Student ID: ");
-        int studentId = scanner.nextInt();
-        System.out.print("Enter Book ID: ");
-        int bookId = scanner.nextInt();
+        int studentId = readInt("Enter Student ID: ");
+        int bookId = readInt("Enter Book ID: ");
 
         Student student = students.stream().filter(s -> s.getId() == studentId).findFirst().orElse(null);
         Book book = books.stream().filter(b -> b.getId() == bookId).findFirst().orElse(null);
@@ -184,14 +175,33 @@ public class LibraryManagementSystem {
     }
 
     private static void returnBook() {
-        System.out.print("Enter Book ID: ");
-        int bookId = scanner.nextInt();
+        int bookId = readInt("Enter Book ID: ");
         Book book = books.stream().filter(b -> b.getId() == bookId).findFirst().orElse(null);
         if (book == null) {
             System.out.println("Invalid Book ID.");
         } else {
             book.setQuantity(book.getQuantity() + 1);
             System.out.println("Book returned successfully!");
+        }
+    }
+
+    /**
+     * Reads a whole line and keeps asking until it is a valid integer,
+     * so typing letters no longer crashes the program (InputMismatchException).
+     */
+    private static int readInt(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            if (!scanner.hasNextLine()) {
+                System.out.println("\nNo more input. Exiting.");
+                System.exit(0);
+            }
+            String line = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a whole number.");
+            }
         }
     }
 }
